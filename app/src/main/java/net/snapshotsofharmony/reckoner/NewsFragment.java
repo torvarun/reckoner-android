@@ -188,7 +188,7 @@ public class NewsFragment extends Fragment {
                         }catch (Exception e){
                             e.printStackTrace();
                             articles = new ArrayList();
-                        }w
+                        }
 
                         mAdapter.addArticles(articles); //Add the new articles to the adapter
                         mRecyclerView.invalidate();
