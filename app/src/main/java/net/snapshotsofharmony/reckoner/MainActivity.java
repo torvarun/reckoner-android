@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close); //Setup hamburger
         mDrawer.addDrawerListener(drawerToggle); //Link hamburger to app state
 
-        //Start the default view (NewsFragment)
+        //Start the default view (ArticleListFragment)
         if(savedInstanceState == null) {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.flContent, NewsFragment.newInstance(null, null));
+            transaction.replace(R.id.flContent, ArticleListFragment.newInstance(""));
             transaction.commit();
             nvDrawer.setCheckedItem(R.id.nav_news); //Update the navbar
         }
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         Class fragmentClass = null;
         switch(menuItem.getItemId()) {
             case R.id.nav_news:
-                fragmentClass = NewsFragment.class;
+                fragmentClass = ArticleListFragment.class;
                 Log.v(TAG, "news");
                 break;
             case R.id.nav_editorial:

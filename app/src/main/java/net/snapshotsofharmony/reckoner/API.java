@@ -85,7 +85,6 @@ public class API {
                 }
                 //String image = current.getString("guid");
 
-                Log.v(TAG, "image " + i + ": " + image);
                 articles.add(new Article(title, author, desc, image));
             }
         }
