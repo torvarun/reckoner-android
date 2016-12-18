@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">The Reckoner of MGCI</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- Slugs of categories to access for api calls -->
+    <string name="news">news</string>
+    <string name="life">life</string>
+    <string name="writing">writing</string>
+    <string name="art">art</string>
+    <string name="reviews">reviews</string>
+    <string name="editorial">no-offence-but</string>
+    <string name="editorialCartoons">editorial-cartoons</string>
+    <string name="humansOfGarneau">hog</string>
+    <string name="teacherFeature">teacher-feature</string>
+    <string name="worldWeekly">world-weekly-news</string>
+
+</resources>
