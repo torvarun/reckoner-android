@@ -36,13 +36,12 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close); //Setup hamburger
         mDrawer.addDrawerListener(drawerToggle); //Link hamburger to app state
 
-        //Start the default view (ArticleListFragment)
+        //Start the default view to show all articles
         if(savedInstanceState == null) {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.flContent, ArticleListFragment.newInstance(""));
             transaction.commit();
-            nvDrawer.setCheckedItem(R.id.nav_news); //Update the navbar
         }
     }
 
@@ -79,29 +78,22 @@ public class MainActivity extends AppCompatActivity {
      */
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
-        Class fragmentClass = null;
         switch(menuItem.getItemId()) {
             case R.id.nav_news:
-                fragmentClass = ArticleListFragment.class;
+                fragment = ArticleListFragment.newInstance(getString(R.string.news));
                 Log.v(TAG, "news");
                 break;
             case R.id.nav_editorial:
-                Log.v(TAG, "option 2");
-                //fragmentClass = SecondFragment.class;
+                Log.v(TAG, "editorial");
+                fragment = ArticleListFragment.newInstance(getString(R.string.editorial));
                 break;
             case R.id.nav_life:
-                Log.v(TAG, "option 3");
-                //fragmentClass = ThirdFragment.class;
+                Log.v(TAG, "life");
+                fragment = ArticleListFragment.newInstance(getString(R.string.life));
                 break;
             default:
                 Log.v(TAG, "default");
-                //fragmentClass = FirstFragment.class;
-        }
-
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
+                fragment = ArticleListFragment.newInstance("");
         }
 
         // Insert the fragment by replacing any existing fragment

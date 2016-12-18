@@ -8,15 +8,22 @@
 
 
     <!-- Slugs of categories to access for api calls -->
-    <string name="news">news</string>
     <string name="life">life</string>
     <string name="writing">writing</string>
     <string name="art">art</string>
     <string name="reviews">reviews</string>
+
     <string name="editorial">no-offence-but</string>
     <string name="editorialCartoons">editorial-cartoons</string>
-    <string name="humansOfGarneau">hog</string>
+
+    <string name="news">news</string>
     <string name="teacherFeature">teacher-feature</string>
     <string name="worldWeekly">world-weekly-news</string>
+    <string name="clubFeature">club-feature</string>
+    <string name="courseFeature">course-feature</string>
+    <string name="sports">sports</string>
+
+    <string name="humansOfGarneau">hog</string>
+    <string name="comingToCanada">coming-to-canada</string>
 
 </resources>
