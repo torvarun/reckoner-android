@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme); //Remove the splash
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        nvDrawer = (NavigationView) findViewById(R.id.navView);
         setupDrawerContent(nvDrawer); //Setup nav drawer
 
         drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close); //Setup hamburger
@@ -90,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_life:
                 Log.v(TAG, "life");
                 fragment = ArticleListFragment.newInstance(getString(R.string.life));
+                break;
+            case R.id.nav_humansOfGarneau:
+                Log.v(TAG, "humans of garneau");
+                fragment = ArticleListFragment.newInstance(getString(R.string.humansOfGarneau));
                 break;
             default:
                 Log.v(TAG, "default");
