@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--<color name="colorPrimary">#2196F3</color>-->
-    <color name="colorPrimary">#2196F3</color>
-    <color name="colorPrimaryDark">#1976D2</color>
-    <color name="colorPrimaryLight">#BBDEFB</color>
-    <color name="colorAccent">#795548</color>
+    <color name="colorPrimary">#154360</color>
+    <color name="colorPrimaryDark">#1C2833</color>
+    <color name="colorPrimaryLight">#D0D3D4</color>
+    <color name="colorAccent">#8A0F0F</color>
     <color name="colorPrimaryText">#212121</color>
-    <color name="colorSecondaryText">#757575</color>
-    <color name="colorIcons">#FFFFFF</color>
-    <color name="colorDivider">#BDBDBD</color>
+    <color name="colorSecondaryText">#D0D3D4</color>
+    <color name="colorIcons">#ECF0F1</color>
+    <color name="colorDivider">#566573</color>
     <color name="overlayText">#FFFFFF</color>
 
     <color name="black_overlay">#66000000</color>
