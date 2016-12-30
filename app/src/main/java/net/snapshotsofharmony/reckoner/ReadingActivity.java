@@ -56,7 +56,7 @@ public class ReadingActivity extends AppCompatActivity {
 
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
-                startActivity(Intent.createChooser(sharingIntent, "Share article with.... "));
+                startActivity(Intent.createChooser(sharingIntent, "Share article with.... ")); //Text displayed on share dialog
                 return true;
 
             default:

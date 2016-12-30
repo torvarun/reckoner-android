@@ -5,6 +5,13 @@
 
     <string name="articleParam">article_intent</string>
 
+    <string name="nav_news">News</string>
+    <string name="nav_editorial">Editorial</string>
+    <string name="nav_life">Life</string>
+    <string name="nav_columns">Columns</string>
+    <string name="nav_hog">Humans of Garneau</string>
+    <string name="nav_announcement">Announcements</string>
+
     <!-- Slugs of categories to access for api calls -->
     <string name="life">life</string>
     <string name="writing">writing</string>

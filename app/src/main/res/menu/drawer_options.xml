@@ -5,21 +5,27 @@
         android:id="@+id/nav_group_main">
         <item
             android:id="@+id/nav_news"
-            android:title="News" />
+            android:title="@string/nav_news"
+            />
         <item
             android:id="@+id/nav_editorial"
-            android:title="Editorial" />
+            android:title="@string/nav_editorial"
+            />
         <item
             android:id="@+id/nav_life"
-            android:title="Life" />
+            android:title="@string/nav_life"/>
     </group>
 
-    <item android:title="Columns"
+    <!--
+    Disable the Human's of Garneau and the Announcements for now
+
+    <item android:title="@string/nav_columns"
         android:id="@+id/nav_group_columns">
         <menu>
             <group android:checkableBehavior="single">
-                <item android:title="Humans of Garneau"
-                    android:id="@+id/nav_humansOfGarneau"/>
+                <item android:title="@string/nav_hog"
+                    android:id="@+id/nav_humansOfGarneau"
+                    />
             </group>
         </menu>
     </item>
@@ -29,9 +35,7 @@
         android:id="@+id/nav_group_other">
         <item
             android:id="@+id/nav_announcements"
-            android:title="Announcements" />
-        <item
-            android:id="@+id/nav_socres"
-            android:title="Sports Scores" />
+            android:title="@string/nav_announcement" />
     </group>
+    -->
 </menu>

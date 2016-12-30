@@ -92,11 +92,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.v(TAG, "life");
                 fragment = ArticleListFragment.newInstance(getString(R.string.life));
                 break;
+            /* Disabled for alpha build
             case R.id.nav_humansOfGarneau:
                 Log.v(TAG, "humans of garneau");
                 //fragment = ArticleListFragment.newInstance(getString(R.string.humansOfGarneau));
                 fragment = HOGFragment.newInstance(null, null);
-                break;
+                break; */
             default:
                 Log.v(TAG, "default");
                 fragment = ArticleListFragment.newInstance("");
