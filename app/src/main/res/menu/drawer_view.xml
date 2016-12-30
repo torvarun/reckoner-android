@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/nav_group_main">
         <item
             android:id="@+id/nav_news"
             android:title="News" />
@@ -13,7 +14,8 @@
             android:title="Life" />
     </group>
 
-    <item android:title="Columns">
+    <item android:title="Columns"
+        android:id="@+id/nav_group_columns">
         <menu>
             <group android:checkableBehavior="single">
                 <item android:title="Humans of Garneau"
@@ -23,7 +25,8 @@
     </item>
 
     <group
-        android:checkableBehavior="single">
+        android:checkableBehavior="single"
+        android:id="@+id/nav_group_other">
         <item
             android:id="@+id/nav_announcements"
             android:title="Announcements" />

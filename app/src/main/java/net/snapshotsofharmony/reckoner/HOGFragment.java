@@ -1,19 +1,18 @@
 package net.snapshotsofharmony.reckoner;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
-import net.snapshotsofharmony.reckoner.View.OnItemClickListener;
-import net.snapshotsofharmony.reckoner.View.ArticleListAdapter;
+import net.snapshotsofharmony.reckoner.View.ImageGridAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,23 +21,20 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ArticleListFragment.OnFragmentInteractionListener} interface
+ * {@link HOGFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ArticleListFragment#newInstance} factory method to
+ * Use the {@link HOGFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
+ * Fragment for Humans of Garneau browsing. Presents the thumbnails in a grid view along with a static banner and button.
  */
-public class ArticleListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "ARG_CATEGORY_NAME";
-
-    private String mCategory;
+public class HOGFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
     RecyclerView mRecyclerView;
-    LinearLayoutManager mLayoutManager;
-    ArticleListAdapter mAdapter;
+    GridLayoutManager mGridLayoutManager;
+    ImageGridAdapter mAdapter;
 
     //Used to check for scrolled state
     private boolean loading = true; //Changed if new articles need to be loaded when scrolled
@@ -47,9 +43,9 @@ public class ArticleListFragment extends Fragment {
     int totalItemCount;
     int nextPage = 2; //Next page to load. First page loaded by default
 
-    private final String TAG = "ArticleListFragment";
+    private final String TAG = "HOGFragment";
 
-    public ArticleListFragment() {
+    public HOGFragment() {
         // Required empty public constructor
     }
 
@@ -57,14 +53,14 @@ public class ArticleListFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param category Parameter referring to the content being displayed in the fragment.
-     * @return A new instance of fragment ArticleListFragment.
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment HOGFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ArticleListFragment newInstance(String category) {
-        ArticleListFragment fragment = new ArticleListFragment();
+    public static HOGFragment newInstance(String param1, String param2) {
+        HOGFragment fragment = new HOGFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, category);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,27 +68,20 @@ public class ArticleListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mCategory = getArguments().getString(ARG_PARAM1);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_hog, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_article_list, container, false);
-
-        mRecyclerView =  (RecyclerView) view.findViewById(R.id.articleList);
+        mRecyclerView =  (RecyclerView) view.findViewById(R.id.hogGrid);
         mRecyclerView.setHasFixedSize(true); //Size can't change
 
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mGridLayoutManager = new GridLayoutManager(getContext(), 2); //2 columns
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.addOnScrollListener(mOnScroll);
-
-
-        //mRecyclerView.setOnClickListener(mOnClick);
 
         loadArticles(); //Load the articles
 
@@ -141,32 +130,24 @@ public class ArticleListFragment extends Fragment {
     private void loadArticles(){
         List articles;
         try {
-            articles = API.getArticles(1, mCategory);
+            articles = API.getArticles(1, getString(R.string.humansOfGarneau));
         }catch (Exception e){
             e.printStackTrace();
             articles = new ArrayList();
         }
 
         if(articles != null) {
-            mAdapter = new ArticleListAdapter(articles, new OnItemClickListener() {
-                @Override
-                public void onItemClick(Article a) {
-                    Log.v(TAG, "Item clicked: " + a.getTitle());
-
-                    Intent intent = new Intent(getContext(), ReadingActivity.class);
-                    intent.putExtra(getString(R.string.articleParam), a);
-                    startActivity(intent);
-
-                    /*FragmentManager manager = getFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.flContent, ReadingFragment.newInstance(a, ""));
-                    transaction.commit(); */
-                }
-            });
-
+            mAdapter = new ImageGridAdapter(articles);
             mRecyclerView.setAdapter(mAdapter);
         }
     }
+
+    AdapterView.OnItemClickListener mOnClick = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Article article = (Article) adapterView.getItemAtPosition(i); //Access the clicked item
+        }
+    };
 
     RecyclerView.OnScrollListener mOnScroll = new RecyclerView.OnScrollListener() {
         @Override
@@ -176,31 +157,31 @@ public class ArticleListFragment extends Fragment {
             if(dy > 0) //check for scroll down
             {
                 int pos = mRecyclerView.getLayoutManager().getItemCount();
-                visibleItemCount = mLayoutManager.getChildCount();
-                totalItemCount = mLayoutManager.getItemCount();
-                pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                visibleItemCount = mGridLayoutManager.getChildCount();
+                totalItemCount = mGridLayoutManager.getItemCount();
+                pastVisiblesItems = mGridLayoutManager.findFirstVisibleItemPosition();
 
                 //if (loading)
                 //{
-                    if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                    {
-                        loading = false;
-                        Log.v(TAG, "Loading more articles");
+                if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
+                {
+                    loading = false;
+                    Log.v(TAG, "Loading more articles");
 
-                        //Load more articles
-                        List articles;
-                        try {
-                            articles = API.getArticles(nextPage, mCategory);
-                            nextPage++;
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            articles = new ArrayList();
-                        }
-
-                        mAdapter.addArticles(articles); //Add the new articles to the adapter
-                        mRecyclerView.invalidate();
-                        mRecyclerView.getLayoutManager().scrollToPosition(pastVisiblesItems);
+                    //Load more articles
+                    List articles;
+                    try {
+                        articles = API.getArticles(nextPage, getString(R.string.humansOfGarneau));
+                        nextPage++;
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        articles = new ArrayList();
                     }
+
+                    mAdapter.addArticles(articles); //Add the new articles to the adapter
+                    mRecyclerView.invalidate();
+                    mRecyclerView.getLayoutManager().scrollToPosition(pastVisiblesItems);
+                }
                 //}
             }
         }
@@ -212,5 +193,4 @@ public class ArticleListFragment extends Fragment {
 
 
     };
-
 }

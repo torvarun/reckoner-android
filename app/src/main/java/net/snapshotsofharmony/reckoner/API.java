@@ -41,7 +41,7 @@ public class API {
      * @throws ExecutionException
      */
     public static ArrayList<Article> getArticles(int page, String category) throws JSONException, IOException, InterruptedException, ExecutionException{
-        String resp = new GetArticles().execute(URL + page + CATEGORY + category).get(); //Make the call
+        String resp = new GetArticles().execute(URL + page + CATEGORY + category).get(); //Make the call synchronously
 
         if(resp == null) {
             Log.v(TAG, "resp is null");
@@ -67,6 +67,13 @@ public class API {
                 String desc = current.getString("excerpt");
                 desc = desc.substring(3, desc.length() - 5).replace("&nbsp;", ""); //Removes the html tags
 
+                String content = "<!DOCTYPE html><html><head><style>" +
+                        "body{margin: 0; padding: 0;}" +
+                        "p{font-family: Constantia, \"Book Antiqua\", Cambria, serif;font-size: 14px;line-height: 1.5;}" +
+                        "div[id^=\"attachment\"],img{max-width: 100%;height: auto;}" +
+                        "a[href^=\"http://thereckoner.ca/wp-content/uploads/\"]{pointer-events: none;cursor: default;}" +
+                        "</style><body>" + current.get("content") + "</body></html>";
+
                 //CHeck the sdk due to Html.fromHtml(String) being deprecated
                 if (Build.VERSION.SDK_INT >= 24) {
                     title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
@@ -81,11 +88,13 @@ public class API {
                     image = current.getJSONObject("featured_image").getString("guid");
                 }catch (Exception e){
                     image = "";
-                    e.printStackTrace();
+                    //e.printStackTrace(); //No need to print the stacktrace
                 }
                 //String image = current.getString("guid");
 
-                articles.add(new Article(title, author, desc, image));
+                String url = current.getString("link");
+
+                articles.add(new Article(title, author, desc, image, content, url));
             }
         }
 
@@ -104,7 +113,6 @@ public class API {
 
                 Response response = client.newCall(request).execute();
                 result = response.body().string();
-                Log.v(TAG, result);
             }catch (IOException e){
                 result = null;
                 e.printStackTrace();

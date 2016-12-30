@@ -3,6 +3,8 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
+    <string name="articleParam">article_intent</string>
+
     <!-- Slugs of categories to access for api calls -->
     <string name="life">life</string>
     <string name="writing">writing</string>
@@ -21,5 +23,12 @@
 
     <string name="humansOfGarneau">hog</string>
     <string name="comingToCanada">coming-to-canada</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_activity_reading">ReadingActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

@@ -94,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.nav_humansOfGarneau:
                 Log.v(TAG, "humans of garneau");
-                fragment = ArticleListFragment.newInstance(getString(R.string.humansOfGarneau));
+                //fragment = ArticleListFragment.newInstance(getString(R.string.humansOfGarneau));
+                fragment = HOGFragment.newInstance(null, null);
                 break;
             default:
                 Log.v(TAG, "default");
