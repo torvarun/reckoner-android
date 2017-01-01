@@ -20,12 +20,10 @@ import java.util.List;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ArticleListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ArticleListFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by Varun Venkataramanan.
+ *
+ * Most used Fragment in the app. Displays posts based on the param category.
+ * Uses the ArticleList Recycler View to display the articles.
  */
 public class ArticleListFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -36,9 +34,9 @@ public class ArticleListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    RecyclerView mRecyclerView;
-    LinearLayoutManager mLayoutManager;
-    ArticleListAdapter mAdapter;
+    RecyclerView mRecyclerView; //The main recycler view
+    LinearLayoutManager mLayoutManager; //Layout manager for the recycler view
+    ArticleListAdapter mAdapter; //Adapter to display the data in the recycler view
 
     //Used to check for scrolled state
     private boolean loading = true; //Changed if new articles need to be loaded when scrolled
@@ -138,76 +136,76 @@ public class ArticleListFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    /**
+     * Loads the articles into the views
+     */
     private void loadArticles(){
+        //Make call to API
         List articles;
         try {
-            articles = API.getArticles(1, mCategory);
+            articles = API.getArticles(1, mCategory); //Pass in the global fragment arg
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             articles = new ArrayList();
         }
 
-        if(articles != null) {
+        if(articles != null) { //If articles are returned
+            //Setup the adapter with the on click listneer
             mAdapter = new ArticleListAdapter(articles, new OnItemClickListener() {
                 @Override
                 public void onItemClick(Article a) {
-                    Log.v(TAG, "Item clicked: " + a.getTitle());
+                    Log.v(TAG, "Item clicked: " + a.getTitle()); //Log the article that was clicked
 
+                    //Display ReadingActivity with the selected article
                     Intent intent = new Intent(getContext(), ReadingActivity.class);
                     intent.putExtra(getString(R.string.articleParam), a);
                     startActivity(intent);
-
-                    /*FragmentManager manager = getFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.flContent, ReadingFragment.newInstance(a, ""));
-                    transaction.commit(); */
                 }
             });
 
-            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setAdapter(mAdapter); //Set the adapter to the recycler view
         }
     }
 
+    /**
+     * Method to handle the loading of more articles on scroll to the bottom on the recycler view.
+     */
     RecyclerView.OnScrollListener mOnScroll = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 
-            if(dy > 0) //check for scroll down
-            {
+            if(dy > 0){ //check for scroll down
+                //Get the current state data
                 int pos = mRecyclerView.getLayoutManager().getItemCount();
                 visibleItemCount = mLayoutManager.getChildCount();
                 totalItemCount = mLayoutManager.getItemCount();
                 pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
 
-                //if (loading)
-                //{
-                    if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                    {
-                        loading = false;
-                        Log.v(TAG, "Loading more articles");
+                if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                    loading = false;
+                    Log.v(TAG, "Loading more articles");
 
-                        //Load more articles
-                        List articles;
-                        try {
-                            articles = API.getArticles(nextPage, mCategory);
-                            nextPage++;
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            articles = new ArrayList();
-                        }
-
-                        mAdapter.addArticles(articles); //Add the new articles to the adapter
-                        mRecyclerView.invalidate();
-                        mRecyclerView.getLayoutManager().scrollToPosition(pastVisiblesItems);
+                    //Load more articles
+                    List articles;
+                    try {
+                        articles = API.getArticles(nextPage, mCategory);
+                        nextPage++;
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        articles = new ArrayList();
                     }
-                //}
+
+                    mAdapter.addArticles(articles); //Add the new articles to the adapter
+                    mRecyclerView.invalidate();
+                    mRecyclerView.getLayoutManager().scrollToPosition(pastVisiblesItems); //Reset the pos
+                }
             }
         }
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            //Do nothing
+            //VERY IMPORTANT that this is blank to allow for proper scroll reload handling
         }
 
 

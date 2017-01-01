@@ -16,13 +16,16 @@ import net.snapshotsofharmony.reckoner.R;
 import java.util.List;
 
 /**
- * Created by Varun on 2016-12-13.
+ * Created by Varun Venkataramanan on 2016-12-13.
+ *
+ * Adapter class to display articles in a Recycler View. This view format is the main one for the Reckoner App.
+ * Presents articles with e athumbnail, title, and description.
  */
 
 public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.ArticleViewHolder>{
 
-    private List<Article> articles;
-    private final OnItemClickListener mOnItemClickListener;
+    private List<Article> articles; //Articles displayed
+    private final OnItemClickListener mOnItemClickListener; //Onclick listener
 
     /**
      * ViewHolder for an item in the RecyclerView.
@@ -65,7 +68,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
                 public void onClick(View view) {
                     listener.onItemClick(article);
                 }
-            });
+            }); //Set the onClickListener that was passed in
         }
     }
 

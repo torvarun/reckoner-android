@@ -3,7 +3,9 @@ package net.snapshotsofharmony.reckoner;
 import java.io.Serializable;
 
 /**
- * Created by Varun on 2016-12-13.
+ * Created by Varun Venkataramanan on 2016-12-13.
+ *
+ * Data class for articles returned through the API.
  */
 
 public class Article implements Serializable{
@@ -45,4 +47,13 @@ public class Article implements Serializable{
 
     public String getContentURL() {
         return contentURL;}
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Article){
+            return title.equals(((Article) obj).title);
+        } else {
+            return false;
+        }
+    }
 }

@@ -19,12 +19,7 @@ import java.util.List;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link HOGFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link HOGFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by Varun Venkataramanan.
  *
  * Fragment for Humans of Garneau browsing. Presents the thumbnails in a grid view along with a static banner and button.
  */
@@ -58,7 +53,7 @@ public class HOGFragment extends Fragment {
      * @return A new instance of fragment HOGFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HOGFragment newInstance(String param1, String param2) {
+    public static HOGFragment newInstance() {
         HOGFragment fragment = new HOGFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -127,44 +122,40 @@ public class HOGFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    /**
+     * Loads Humans of Garneau Articles from the Reckoner API
+     */
     private void loadArticles(){
+        //Make the API Calls
         List articles;
         try {
-            articles = API.getArticles(1, getString(R.string.humansOfGarneau));
+            articles = API.getArticles(1, getString(R.string.humansOfGarneau)); //Use the param from strings.xml
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             articles = new ArrayList();
         }
 
-        if(articles != null) {
+        if(articles != null) { //If there are articles to display
+            //Setup the adapter
             mAdapter = new ImageGridAdapter(articles);
             mRecyclerView.setAdapter(mAdapter);
         }
     }
-
-    AdapterView.OnItemClickListener mOnClick = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Article article = (Article) adapterView.getItemAtPosition(i); //Access the clicked item
-        }
-    };
 
     RecyclerView.OnScrollListener mOnScroll = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 
-            if(dy > 0) //check for scroll down
-            {
+            if(dy > 0){ //check for scroll down
+                //Get current scroll state
                 int pos = mRecyclerView.getLayoutManager().getItemCount();
                 visibleItemCount = mGridLayoutManager.getChildCount();
                 totalItemCount = mGridLayoutManager.getItemCount();
                 pastVisiblesItems = mGridLayoutManager.findFirstVisibleItemPosition();
 
-                //if (loading)
-                //{
-                if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                {
+
+                if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                     loading = false;
                     Log.v(TAG, "Loading more articles");
 
@@ -182,13 +173,13 @@ public class HOGFragment extends Fragment {
                     mRecyclerView.invalidate();
                     mRecyclerView.getLayoutManager().scrollToPosition(pastVisiblesItems);
                 }
-                //}
             }
         }
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            //Do nothing
+            //VERY IMPORTANT that this is blank to allow for proper scroll reload handling
+
         }
 
 

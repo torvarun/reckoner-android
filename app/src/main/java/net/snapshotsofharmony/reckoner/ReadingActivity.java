@@ -8,13 +8,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
+/**
+ * Created by Varun Venkataramanan.
+ *
+ * Activity to display an article for reading. Article is displayed in a WebVew.
+ * This activity does not display the navigation drawer so that is is distraction free.
+ *
+ * TODO: Change the viewing from a WebView
+ */
 public class ReadingActivity extends AppCompatActivity {
 
-    private Article mArticle;
+    private Article mArticle; //Article being displayed
 
-    private Toolbar mToolbar;
+    private Toolbar mToolbar; //App toolbar
 
-    private WebView mWebView;
+    private WebView mWebView; //WebView to display the article in
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +72,9 @@ public class ReadingActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Sets up the WebView with the article. Also displays the article title in the toolbar.
+     */
     private void createView(){
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.loadDataWithBaseURL(null, mArticle.getContent(), "text/html", "utf-8", null); //Ensure the utf-8 setting

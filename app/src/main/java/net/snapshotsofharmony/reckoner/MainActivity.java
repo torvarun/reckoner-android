@@ -14,9 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+/**
+ * Created by Varun Venkataramanan.
+ *
+ * MainActivity for the app. Houses the nav drawer and displays the newest articles regardless of category.
+ */
 public class MainActivity extends AppCompatActivity {
-    private DrawerLayout mDrawer;
-    private Toolbar toolbar;
+    private DrawerLayout mDrawer; //Nav Drawer Layout
+    private Toolbar toolbar; //App toolbar
     private NavigationView nvDrawer; //Custom toolbar for the nav drawer
     private final String TAG = "MainActivity"; //Tag for logging
     private ActionBarDrawerToggle drawerToggle; //Hamburger icon
@@ -46,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Handle item click for the nav drawer
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
@@ -62,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Setip the nav drawer on click interface
+     * @param navigationView
+     */
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -95,8 +109,7 @@ public class MainActivity extends AppCompatActivity {
             /* Disabled for alpha build
             case R.id.nav_humansOfGarneau:
                 Log.v(TAG, "humans of garneau");
-                //fragment = ArticleListFragment.newInstance(getString(R.string.humansOfGarneau));
-                fragment = HOGFragment.newInstance(null, null);
+                fragment = HOGFragment.newInstance();
                 break; */
             default:
                 Log.v(TAG, "default");
