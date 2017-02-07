@@ -1,4 +1,4 @@
-package net.snapshotsofharmony.reckoner.View;
+package ca.thereckoner.reckoner.View;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import net.snapshotsofharmony.reckoner.Article;
-import net.snapshotsofharmony.reckoner.R;
+import ca.thereckoner.reckoner.Article;
+import ca.thereckoner.reckoner.R;
 
 import java.util.List;
 

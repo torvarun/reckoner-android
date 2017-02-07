@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "926580328493",
+    "firebase_url": "https://android-app-8ea34.firebaseio.com",
+    "project_id": "android-app-8ea34",
+    "storage_bucket": "android-app-8ea34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926580328493:android:2ed85cb5ccb6de35",
+        "android_client_info": {
+          "package_name": "ca.thereckoner.reckoner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "926580328493-s03kuvl6j88q1elqp8ccf5mrauashuo8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM3HMwzkCVRxmBqu9dWY0b2nnMF9DaBco"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

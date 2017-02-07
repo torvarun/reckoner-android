@@ -1,4 +1,4 @@
-package net.snapshotsofharmony.reckoner;
+package ca.thereckoner.reckoner;
 
 import android.os.AsyncTask;
 import android.os.Build;

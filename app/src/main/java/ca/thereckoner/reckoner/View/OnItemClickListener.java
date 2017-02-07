@@ -1,6 +1,6 @@
-package net.snapshotsofharmony.reckoner.View;
+package ca.thereckoner.reckoner.View;
 
-import net.snapshotsofharmony.reckoner.Article;
+import ca.thereckoner.reckoner.Article;
 
 /**
  * Created by Varun Venkataramanan on 2016-12-24.

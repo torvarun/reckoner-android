@@ -1,4 +1,4 @@
-package net.snapshotsofharmony.reckoner;
+package ca.thereckoner.reckoner;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("net.snapshotsofharmony.reckoner", appContext.getPackageName());
+        assertEquals("net.thereckoner.reckoner", appContext.getPackageName());
     }
 }

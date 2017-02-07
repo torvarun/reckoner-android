@@ -1,4 +1,4 @@
-package net.snapshotsofharmony.reckoner;
+package ca.thereckoner.reckoner;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -27,12 +27,12 @@ public class ReadingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reading);
+        setContentView(ca.thereckoner.reckoner.R.layout.activity_reading);
 
         Intent intent = getIntent();
-        mArticle = (Article) intent.getSerializableExtra(getString(R.string.articleParam));
+        mArticle = (Article) intent.getSerializableExtra(getString(ca.thereckoner.reckoner.R.string.articleParam));
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar); //Setup toolbar
+        mToolbar = (Toolbar) findViewById(ca.thereckoner.reckoner.R.id.toolbar); //Setup toolbar
         setSupportActionBar(mToolbar);
 
         createView();
@@ -42,14 +42,14 @@ public class ReadingActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         //Add the share icon
-        getMenuInflater().inflate(R.menu.share_menu, menu);
+        getMenuInflater().inflate(ca.thereckoner.reckoner.R.menu.share_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.share:
+            case ca.thereckoner.reckoner.R.id.share:
 
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
@@ -76,7 +76,7 @@ public class ReadingActivity extends AppCompatActivity {
      * Sets up the WebView with the article. Also displays the article title in the toolbar.
      */
     private void createView(){
-        mWebView = (WebView) findViewById(R.id.webView);
+        mWebView = (WebView) findViewById(ca.thereckoner.reckoner.R.id.webView);
         mWebView.loadDataWithBaseURL(null, mArticle.getContent(), "text/html", "utf-8", null); //Ensure the utf-8 setting
 
         setTitle(mArticle.getTitle()); //Set the toolbar to the title of the article

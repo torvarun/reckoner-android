@@ -1,4 +1,4 @@
-package net.snapshotsofharmony.reckoner;
+package ca.thereckoner.reckoner;
 
 import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
@@ -28,25 +28,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme); //Remove the splash
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setTheme(ca.thereckoner.reckoner.R.style.AppTheme); //Remove the splash
+        setContentView(ca.thereckoner.reckoner.R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar); //Setup toolbar
+        toolbar = (Toolbar) findViewById(ca.thereckoner.reckoner.R.id.toolbar); //Setup toolbar
         setSupportActionBar(toolbar);
 
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        nvDrawer = (NavigationView) findViewById(R.id.navView);
+        mDrawer = (DrawerLayout) findViewById(ca.thereckoner.reckoner.R.id.drawer_layout);
+        nvDrawer = (NavigationView) findViewById(ca.thereckoner.reckoner.R.id.navView);
         setupDrawerContent(nvDrawer); //Setup nav drawer
 
-        drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close); //Setup hamburger
+        drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, ca.thereckoner.reckoner.R.string.drawer_open,  ca.thereckoner.reckoner.R.string.drawer_close); //Setup hamburger
         mDrawer.addDrawerListener(drawerToggle); //Link hamburger to app state
 
         //Start the default view to show all articles
         if(savedInstanceState == null) {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.flContent, ArticleListFragment.newInstance(""));
+            transaction.replace(ca.thereckoner.reckoner.R.id.flContent, ArticleListFragment.newInstance(""));
             transaction.commit();
         }
     }
@@ -94,17 +94,17 @@ public class MainActivity extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
         switch(menuItem.getItemId()) {
-            case R.id.nav_news:
-                fragment = ArticleListFragment.newInstance(getString(R.string.news));
+            case ca.thereckoner.reckoner.R.id.nav_news:
                 Log.v(TAG, "news");
+                fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.news));
                 break;
-            case R.id.nav_editorial:
+            case ca.thereckoner.reckoner.R.id.nav_editorial:
                 Log.v(TAG, "editorial");
-                fragment = ArticleListFragment.newInstance(getString(R.string.editorial));
+                fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.editorial));
                 break;
-            case R.id.nav_life:
+            case ca.thereckoner.reckoner.R.id.nav_life:
                 Log.v(TAG, "life");
-                fragment = ArticleListFragment.newInstance(getString(R.string.life));
+                fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.life));
                 break;
             /* Disabled for alpha build
             case R.id.nav_humansOfGarneau:
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        fragmentManager.beginTransaction().replace(ca.thereckoner.reckoner.R.id.flContent, fragment).commit();
 
         // Highlight the selected item has been done by NavigationView
         menuItem.setChecked(true);
