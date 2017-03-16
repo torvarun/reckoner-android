@@ -34,7 +34,6 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     protected static class ArticleViewHolder extends RecyclerView.ViewHolder {
         private CardView cv;
         private TextView title;
-        private TextView author;
         private TextView description;
         private ImageView thumbnail;
 
@@ -42,21 +41,18 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.card_view);
             title = (TextView) itemView.findViewById(R.id.title);
-            //author = (TextView) itemView.findViewById(R.id.author);
             description = (TextView) itemView.findViewById(R.id.description);
             thumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
         }
 
         public void bind(final Article article, final OnItemClickListener listener){
             //Set the title, author and description (excerpt)
-            //holder.author.setText(article.getAuthor());
             title.setText(article.getTitle());
             description.setText(article.getDescription());
 
             //Set the image from URL using Glide library
             Glide.with(thumbnail.getContext())
                     .load(article.getImageURL())
-                    //.placeholder(R.drawable.logo_full) //Needs to be a loading animation/image
                     .error(R.drawable.logo_full) //Set the fallback to the reckoner logo
                     .fallback(R.drawable.logo_full)
                     .fitCenter()
