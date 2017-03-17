@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +21,7 @@ import java.util.List;
  * Created by Varun Venkataramanan on 2016-12-13.
  *
  * Adapter class to display articles in a Recycler View. This view format is the main one for the Reckoner App.
- * Presents articles with e athumbnail, title, and description.
+ * Presents articles with a thumbnail, title, and description.
  */
 
 public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.ArticleViewHolder>{
@@ -50,12 +50,13 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
             description.setText(article.getDescription());
 
             //Set the image from URL using Glide library
-            Glide.with(thumbnail.getContext())
+
+            Picasso.with(thumbnail.getContext())
                     .load(article.getImageURL())
-                    .error(R.drawable.logo_full) //Set the fallback to the reckoner logo
-                    .fallback(R.drawable.logo_full)
-                    .fitCenter()
-                    .crossFade()
+                    .error(R.drawable.logo_full)
+                    .placeholder(R.drawable.logo_full)
+                    .fit()
+                    .centerInside()
                     .into(thumbnail);
 
             cv.setOnClickListener(new View.OnClickListener() {

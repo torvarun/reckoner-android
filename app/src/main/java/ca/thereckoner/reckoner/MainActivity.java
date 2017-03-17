@@ -14,8 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
-import org.lucasr.twowayview.TwoWayView;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
