@@ -13,6 +13,7 @@ android {
     }
     buildTypes {
         release {
+            shrinkResources true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -34,8 +35,9 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.github.SaeedMasoumi:FAB-Loading:0.6.0'
     compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile 'com.jakewharton:butterknife:8.5.1'
+
     testCompile 'junit:junit:4.12'
 }
 

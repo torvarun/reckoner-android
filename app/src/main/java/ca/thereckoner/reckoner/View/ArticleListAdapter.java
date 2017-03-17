@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ca.thereckoner.reckoner.Article;
 import ca.thereckoner.reckoner.R;
 
@@ -32,17 +34,14 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
      * Contains a CardView.
      */
     protected static class ArticleViewHolder extends RecyclerView.ViewHolder {
-        private CardView cv;
-        private TextView title;
-        private TextView description;
-        private ImageView thumbnail;
+        @BindView(R.id.card_view) CardView cv;
+        @BindView(R.id.title) TextView title;
+        @BindView(R.id.description) TextView description;
+        @BindView(R.id.thumbnail) ImageView thumbnail;
 
         ArticleViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.card_view);
-            title = (TextView) itemView.findViewById(R.id.title);
-            description = (TextView) itemView.findViewById(R.id.description);
-            thumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
+            ButterKnife.bind(this, itemView);
         }
 
         public void bind(final Article article, final OnItemClickListener listener){
@@ -101,4 +100,5 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     public void addArticles(List<Article> newArticles){
         articles.addAll(newArticles);
     }
+
 }

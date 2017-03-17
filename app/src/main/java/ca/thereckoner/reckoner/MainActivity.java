@@ -14,15 +14,21 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import org.lucasr.twowayview.TwoWayView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Varun Venkataramanan.
  *
  * MainActivity for the app. Houses the nav drawer and displays the newest articles regardless of category.
  */
 public class MainActivity extends AppCompatActivity {
-    private DrawerLayout mDrawer; //Nav Drawer Layout
-    private Toolbar toolbar; //App toolbar
-    private NavigationView nvDrawer; //Custom toolbar for the nav drawer
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawer; //Nav Drawer Layout
+    @BindView(R.id.toolbar) Toolbar toolbar; //App toolbar
+    @BindView(R.id.navView) NavigationView nvDrawer; //Custom toolbar for the nav drawer
+
     private final String TAG = "MainActivity"; //Tag for logging
     private ActionBarDrawerToggle drawerToggle; //Hamburger icon
 
@@ -31,12 +37,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(ca.thereckoner.reckoner.R.style.AppTheme); //Remove the splash
         setContentView(ca.thereckoner.reckoner.R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        toolbar = (Toolbar) findViewById(ca.thereckoner.reckoner.R.id.toolbar); //Setup toolbar
         setSupportActionBar(toolbar);
-
-        mDrawer = (DrawerLayout) findViewById(ca.thereckoner.reckoner.R.id.drawer_layout);
-        nvDrawer = (NavigationView) findViewById(ca.thereckoner.reckoner.R.id.navView);
         setupDrawerContent(nvDrawer); //Setup nav drawer
 
         drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, ca.thereckoner.reckoner.R.string.drawer_open,  ca.thereckoner.reckoner.R.string.drawer_close); //Setup hamburger
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
      * @param menuItem Menu item in nav drawer that was clicked
      */
     public void selectDrawerItem(MenuItem menuItem) {
-        Fragment fragment = null;
+        Fragment fragment;
         switch(menuItem.getItemId()) {
             case ca.thereckoner.reckoner.R.id.nav_news:
                 Log.v(TAG, "news");
