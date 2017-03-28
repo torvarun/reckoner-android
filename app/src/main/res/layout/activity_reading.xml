@@ -3,29 +3,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context="ca.thereckoner.reckoner.ReadingActivity">
+    tools:context="ca.thereckoner.reckoner.ReadingActivity"
+    >
 
-    <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbar"
+  <include
+      layout="@layout/toolbar"
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      />
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/toolbar"
+      android:padding="5dp"
+      android:background="@color/colorPrimaryLight"
+      >
+
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        >
 
-        <!-- Place all view items in this RelativeLayout-->
-
-        <WebView
-            android:id="@+id/webView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/cardview_light_background"
-            android:padding="3dp"
-            />
-    </RelativeLayout>
+  </RelativeLayout>
 
 </RelativeLayout>

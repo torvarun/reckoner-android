@@ -1,6 +1,7 @@
 package ca.thereckoner.reckoner;
 
 import android.content.res.Configuration;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,9 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by Varun Venkataramanan.
@@ -23,120 +22,150 @@ import butterknife.ButterKnife;
  * MainActivity for the app. Houses the nav drawer and displays the newest articles regardless of category.
  */
 public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawer; //Nav Drawer Layout
-    @BindView(R.id.toolbar) Toolbar toolbar; //App toolbar
-    @BindView(R.id.navView) NavigationView nvDrawer; //Custom toolbar for the nav drawer
 
-    private final String TAG = "MainActivity"; //Tag for logging
-    private ActionBarDrawerToggle drawerToggle; //Hamburger icon
+  private final String TAG = "MainActivity"; //Tag for logging
+  private ActionBarDrawerToggle drawerToggle; //Hamburger icon
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setTheme(ca.thereckoner.reckoner.R.style.AppTheme); //Remove the splash
-        setContentView(ca.thereckoner.reckoner.R.layout.activity_main);
-        ButterKnife.bind(this);
+  private final int NAV_CLOSE_TIME = 250; //250 fragment lauch time delay
 
-        setSupportActionBar(toolbar);
-        setupDrawerContent(nvDrawer); //Setup nav drawer
+  private Handler mHandler;
 
-        drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, ca.thereckoner.reckoner.R.string.drawer_open,  ca.thereckoner.reckoner.R.string.drawer_close); //Setup hamburger
-        mDrawer.addDrawerListener(drawerToggle); //Link hamburger to app state
+  private String oldTitle;
 
-        //Start the default view to show all articles
-        if(savedInstanceState == null) {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(ca.thereckoner.reckoner.R.id.flContent, ArticleListFragment.newInstance(""));
-            transaction.commit();
-        }
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setTheme(ca.thereckoner.reckoner.R.style.AppTheme); //Remove the splash
+    setContentView(ca.thereckoner.reckoner.R.layout.activity_main);
+
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+
+    NavigationView nvDrawer = (NavigationView) findViewById(R.id.nav_view);
+    setupDrawerContent(nvDrawer); //Setup nav drawer
+
+    DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, ca.thereckoner.reckoner.R.string.drawer_open,  ca.thereckoner.reckoner.R.string.drawer_close); //Setup hamburger
+    mDrawer.addDrawerListener(drawerToggle); //Link hamburger to app state
+
+    mHandler = new Handler();
+
+    oldTitle = getString(R.string.app_name);
+
+    //Start the default view to show all articles
+    if(savedInstanceState == null) {
+      FragmentManager manager = getSupportFragmentManager();
+      FragmentTransaction transaction = manager.beginTransaction();
+      transaction.replace(ca.thereckoner.reckoner.R.id.flContent, ArticleListFragment.newInstance(""));
+      transaction.commit();
+    }
+  }
+
+  /**
+   * Handle item click for the nav drawer
+   * @param item
+   * @return
+   */
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (drawerToggle.onOptionsItemSelected(item)) {
+      return true;
     }
 
-    /**
-     * Handle item click for the nav drawer
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerToggle.onOptionsItemSelected(item)) {
+    // The action bar home/up action should open or close the drawer.
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer.openDrawer(GravityCompat.START);
+        return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  /**
+   * Setip the nav drawer on click interface
+   * @param navigationView
+   */
+  private void setupDrawerContent(NavigationView navigationView) {
+    navigationView.setNavigationItemSelectedListener(
+        new NavigationView.OnNavigationItemSelectedListener() {
+          @Override
+          public boolean onNavigationItemSelected(MenuItem menuItem) {
+            selectDrawerItem(menuItem);
             return true;
-        }
+          }
+        });
+  }
 
-        // The action bar home/up action should open or close the drawer.
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawer.openDrawer(GravityCompat.START);
-                return true;
-        }
+  /**
+   * Execute the drawer click
+   * @param menuItem Menu item in nav drawer that was clicked
+   */
+  public void selectDrawerItem(final MenuItem menuItem) {
+    mHandler.postDelayed(new Runnable() {
+      @Override public void run() {
+        startNavDrawerItem(menuItem.getItemId());
+      }
+    }, NAV_CLOSE_TIME);
 
-        return super.onOptionsItemSelected(item);
+    // Highlight the selected item has been done by NavigationView
+    menuItem.setChecked(true);
+
+    // Set action bar title
+    oldTitle = getTitle().toString();
+    setTitle(menuItem.getTitle());
+
+    // Close the navigation drawer
+    DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    mDrawer.closeDrawer(GravityCompat.START);
+  }
+
+  private void startNavDrawerItem(int itemId){
+    Fragment fragment;
+    switch(itemId) {
+      case ca.thereckoner.reckoner.R.id.nav_news:
+        Log.v(TAG, "news");
+        fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.news));
+        break;
+      case ca.thereckoner.reckoner.R.id.nav_editorial:
+        Log.v(TAG, "editorial");
+        fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.editorial));
+        break;
+      case ca.thereckoner.reckoner.R.id.nav_life:
+        Log.v(TAG, "life");
+        fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.life));
+        break;
+      default:
+        Log.v(TAG, "default");
+        fragment = ArticleListFragment.newInstance("");
     }
 
-    /**
-     * Setip the nav drawer on click interface
-     * @param navigationView
-     */
-    private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
-    }
+    // Insert the fragment by replacing any existing fragment
+    final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+    ft.replace(R.id.flContent, fragment);
+    ft.addToBackStack(null);
+    ft.commit();
+  }
 
-    /**
-     * Execute the drawer click
-     * @param menuItem Menu item in nav drawer that was clicked
-     */
-    public void selectDrawerItem(MenuItem menuItem) {
-        Fragment fragment;
-        switch(menuItem.getItemId()) {
-            case ca.thereckoner.reckoner.R.id.nav_news:
-                Log.v(TAG, "news");
-                fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.news));
-                break;
-            case ca.thereckoner.reckoner.R.id.nav_editorial:
-                Log.v(TAG, "editorial");
-                fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.editorial));
-                break;
-            case ca.thereckoner.reckoner.R.id.nav_life:
-                Log.v(TAG, "life");
-                fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.life));
-                break;
-            default:
-                Log.v(TAG, "default");
-                fragment = ArticleListFragment.newInstance("");
-        }
+  @Override
+  protected void onPostCreate(Bundle savedInstanceState) {
+    super.onPostCreate(savedInstanceState);
+    // Sync the toggle state after onRestoreInstanceState has occurred.
+    drawerToggle.syncState();
+  }
 
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(ca.thereckoner.reckoner.R.id.flContent, fragment).commit();
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    // Pass any configuration change to the drawer toggles
+    drawerToggle.onConfigurationChanged(newConfig);
+  }
 
-        // Highlight the selected item has been done by NavigationView
-        menuItem.setChecked(true);
-        // Set action bar title
-        setTitle(menuItem.getTitle());
-        // Close the navigation drawer
-        mDrawer.closeDrawers();
-    }
+  @Override public void onBackPressed() {
+    super.onBackPressed();
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggles
-        drawerToggle.onConfigurationChanged(newConfig);
-    }
-
-
+    setTitle(oldTitle);
+  }
 }
