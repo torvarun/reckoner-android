@@ -1,6 +1,6 @@
-package ca.thereckoner.reckoner.View;
+package ca.thereckoner.thereckoner.View;
 
-import ca.thereckoner.reckoner.Article;
+import ca.thereckoner.thereckoner.Article;
 
 /**
  * Created by Varun Venkataramanan on 2016-12-24.

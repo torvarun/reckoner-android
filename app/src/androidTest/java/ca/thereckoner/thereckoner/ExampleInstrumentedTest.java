@@ -1,4 +1,4 @@
-package ca.thereckoner.reckoner;
+package ca.thereckoner.thereckoner;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

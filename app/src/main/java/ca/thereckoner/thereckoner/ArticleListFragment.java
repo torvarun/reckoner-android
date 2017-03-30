@@ -1,4 +1,4 @@
-package ca.thereckoner.reckoner;
+package ca.thereckoner.thereckoner;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,9 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ProgressBar;
-import ca.thereckoner.reckoner.View.InfiniteRecyclerViewScrollAdapter;
-import ca.thereckoner.reckoner.View.OnItemClickListener;
-import ca.thereckoner.reckoner.View.ArticleListAdapter;
+import ca.thereckoner.thereckoner.View.InfiniteRecyclerViewScrollAdapter;
+import ca.thereckoner.thereckoner.View.OnItemClickListener;
+import ca.thereckoner.thereckoner.View.ArticleListAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,9 +95,9 @@ public class ArticleListFragment extends Fragment {
     // Inflate the layout for this fragment
 
     View view =
-        inflater.inflate(ca.thereckoner.reckoner.R.layout.fragment_article_list, container, false);
+        inflater.inflate(ca.thereckoner.thereckoner.R.layout.fragment_article_list, container, false);
 
-    articleList = (RecyclerView) view.findViewById(ca.thereckoner.reckoner.R.id.articleList);
+    articleList = (RecyclerView) view.findViewById(ca.thereckoner.thereckoner.R.id.articleList);
     articleList.setHasFixedSize(true); //Size can't change
 
     layoutManager = new LinearLayoutManager(getContext());
@@ -274,7 +274,7 @@ public class ArticleListFragment extends Fragment {
 
               //Display ReadingActivity with the selected article
               Intent intent = new Intent(getContext(), ReadingActivity.class);
-              intent.putExtra(getString(ca.thereckoner.reckoner.R.string.articleParam), a);
+              intent.putExtra(getString(ca.thereckoner.thereckoner.R.string.articleParam), a);
               startActivity(intent);
             }
           });

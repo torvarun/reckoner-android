@@ -1,4 +1,4 @@
-package ca.thereckoner.reckoner;
+package ca.thereckoner.thereckoner;
 
 import org.junit.Test;
 

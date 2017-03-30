@@ -1,4 +1,4 @@
-package ca.thereckoner.reckoner.View;
+package ca.thereckoner.thereckoner.View;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;

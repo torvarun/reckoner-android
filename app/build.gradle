@@ -4,11 +4,11 @@ android {
   compileSdkVersion 24
   buildToolsVersion '25.0.0'
   defaultConfig {
-    applicationId "ca.thereckoner.reckoner"
+    applicationId "ca.thereckoner.thereckoner"
     minSdkVersion 22
     targetSdkVersion 24
-    versionCode 1
-    versionName "1.0"
+    versionCode 3
+    versionName "2.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {

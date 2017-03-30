@@ -1,6 +1,5 @@
-package ca.thereckoner.reckoner.View;
+package ca.thereckoner.thereckoner.View;
 
-import android.media.Image;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,10 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import ca.thereckoner.reckoner.Article;
-import ca.thereckoner.reckoner.R;
+import ca.thereckoner.thereckoner.Article;
+import ca.thereckoner.thereckoner.R;
 
 import java.util.List;
 

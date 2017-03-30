@@ -1,4 +1,4 @@
-package ca.thereckoner.reckoner;
+package ca.thereckoner.thereckoner;
 
 import android.content.res.Configuration;
 import android.os.Handler;
@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setTheme(ca.thereckoner.reckoner.R.style.AppTheme); //Remove the splash
-    setContentView(ca.thereckoner.reckoner.R.layout.activity_main);
+    setTheme(ca.thereckoner.thereckoner.R.style.AppTheme); //Remove the splash
+    setContentView(ca.thereckoner.thereckoner.R.layout.activity_main);
 
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     setupDrawerContent(nvDrawer); //Setup nav drawer
 
     DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-    drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, ca.thereckoner.reckoner.R.string.drawer_open,  ca.thereckoner.reckoner.R.string.drawer_close); //Setup hamburger
+    drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, ca.thereckoner.thereckoner.R.string.drawer_open,  ca.thereckoner.thereckoner.R.string.drawer_close); //Setup hamburger
     mDrawer.addDrawerListener(drawerToggle); //Link hamburger to app state
 
     mHandler = new Handler();
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     if(savedInstanceState == null) {
       FragmentManager manager = getSupportFragmentManager();
       FragmentTransaction transaction = manager.beginTransaction();
-      transaction.replace(ca.thereckoner.reckoner.R.id.flContent, ArticleListFragment.newInstance(""));
+      transaction.replace(ca.thereckoner.thereckoner.R.id.flContent, ArticleListFragment.newInstance(""));
       transaction.commit();
     }
   }
@@ -123,17 +123,17 @@ public class MainActivity extends AppCompatActivity {
   private void startNavDrawerItem(int itemId){
     Fragment fragment;
     switch(itemId) {
-      case ca.thereckoner.reckoner.R.id.nav_news:
+      case ca.thereckoner.thereckoner.R.id.nav_news:
         Log.v(TAG, "news");
-        fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.news));
+        fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.thereckoner.R.string.news));
         break;
-      case ca.thereckoner.reckoner.R.id.nav_editorial:
+      case ca.thereckoner.thereckoner.R.id.nav_editorial:
         Log.v(TAG, "editorial");
-        fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.editorial));
+        fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.thereckoner.R.string.editorial));
         break;
-      case ca.thereckoner.reckoner.R.id.nav_life:
+      case ca.thereckoner.thereckoner.R.id.nav_life:
         Log.v(TAG, "life");
-        fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.life));
+        fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.thereckoner.R.string.life));
         break;
       default:
         Log.v(TAG, "default");
