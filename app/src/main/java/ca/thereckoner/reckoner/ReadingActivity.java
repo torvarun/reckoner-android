@@ -84,4 +84,10 @@ public class ReadingActivity extends AppCompatActivity {
 
     setTitle(mArticle.getTitle()); //Set the toolbar to the title of the article
   }
+
+  @Override public void onBackPressed() {
+    super.onBackPressed();
+
+    finish();
+  }
 }

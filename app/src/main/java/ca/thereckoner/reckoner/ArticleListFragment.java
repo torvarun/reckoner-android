@@ -3,20 +3,31 @@ package ca.thereckoner.reckoner;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ProgressBar;
+import ca.thereckoner.reckoner.View.InfiniteRecyclerViewScrollAdapter;
 import ca.thereckoner.reckoner.View.OnItemClickListener;
 import ca.thereckoner.reckoner.View.ArticleListAdapter;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Created by Varun Venkataramanan.
@@ -25,26 +36,30 @@ import java.util.List;
  * Uses the ArticleList Recycler View to display the articles.
  */
 public class ArticleListFragment extends Fragment {
-  // TODO: Rename parameter arguments, choose names that match
-  // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
   private static final String ARG_PARAM1 = "ARG_CATEGORY_NAME";
 
-  private String mCategory;
+  private String category;
 
-  private OnFragmentInteractionListener mListener;
+  private OnFragmentInteractionListener interactionListener;
 
-  RecyclerView mRecyclerView; //The main recycler view
-  LinearLayoutManager mLayoutManager; //Layout manager for the recycler view
-  ArticleListAdapter mAdapter; //Adapter to display the data in the recycler view
+  private Handler handler;
+  private final int INIT_LOAD_DELAY = 10000; //Delay to load the secondary items
 
-  //Used to check for scrolled state
-  private boolean loading = true; //Changed if new articles need to be loaded when scrolled
-  int pastVisiblesItems;
-  int visibleItemCount;
-  int totalItemCount;
-  int nextPage = 2; //Next page to load. First page loaded by default
+  RecyclerView articleList; //The main recycler view
+  LinearLayoutManager layoutManager; //Layout manager for the recycler view
+  ArticleListAdapter articleListAdapter; //Adapter to display the data in the recycler view
+  InfiniteRecyclerViewScrollAdapter scrollAdapter;
 
-  private final String TAG = "ArticleListFragment";
+  ProgressBar loadingAnimation;
+
+  int nextPage = 1; //Last page of articles loaded by the app
+
+  private static final String TAG = "ArticleListFragment";
+
+  private static final String URL = "http://www.thereckoner.ca/wp-json/posts?page=";
+  private static final String PARAM_CATEGORY = "&filter[category_name]=";
+  private static final String PARAM_POST_LIMIT = "&filter[posts_per_page]=";
+  OkHttpClient client = new OkHttpClient();
 
   public ArticleListFragment() {
     // Required empty public constructor
@@ -69,8 +84,10 @@ public class ArticleListFragment extends Fragment {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (getArguments() != null) {
-      mCategory = getArguments().getString(ARG_PARAM1);
+      category = getArguments().getString(ARG_PARAM1);
     }
+
+    handler = new Handler();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,27 +97,36 @@ public class ArticleListFragment extends Fragment {
     View view =
         inflater.inflate(ca.thereckoner.reckoner.R.layout.fragment_article_list, container, false);
 
-    mRecyclerView = (RecyclerView) view.findViewById(ca.thereckoner.reckoner.R.id.articleList);
-    mRecyclerView.setHasFixedSize(true); //Size can't change
+    articleList = (RecyclerView) view.findViewById(ca.thereckoner.reckoner.R.id.articleList);
+    articleList.setHasFixedSize(true); //Size can't change
 
-    mLayoutManager = new LinearLayoutManager(getContext());
-    mRecyclerView.setLayoutManager(mLayoutManager);
-    mRecyclerView.addOnScrollListener(mOnScroll);
+    layoutManager = new LinearLayoutManager(getContext());
+    articleList.setLayoutManager(layoutManager);
+
+    scrollAdapter = new InfiniteRecyclerViewScrollAdapter(layoutManager) {
+      @Override public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+        loadFromAPI();
+      }
+    };
+    articleList.addOnScrollListener(scrollAdapter);
+
+
+    loadingAnimation = (ProgressBar) view.findViewById(R.id.loading_animation);
 
     return view;
   }
 
   // TODO: Rename method, update argument and hook method into UI event
   public void onButtonPressed(Uri uri) {
-    if (mListener != null) {
-      mListener.onFragmentInteraction(uri);
+    if (interactionListener != null) {
+      interactionListener.onFragmentInteraction(uri);
     }
   }
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
         /*if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+            interactionListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -110,12 +136,19 @@ public class ArticleListFragment extends Fragment {
   @Override public void onResume() {
     super.onResume();
 
-    loadArticles(); //Load the articles
+    loadFromAPI();
+
+    handler.postDelayed(new Runnable() {
+      @Override public void run() {
+        loadFromAPI();
+      }
+    }, INIT_LOAD_DELAY);
+
   }
 
   @Override public void onDetach() {
     super.onDetach();
-    mListener = null;
+    interactionListener = null;
   }
 
   /**
@@ -134,72 +167,132 @@ public class ArticleListFragment extends Fragment {
   }
 
   /**
-   * Loads the articles into the views
+   * Loads more articles from the API.
    */
-  private void loadArticles() {
-    //Make call to API
-    List articles;
-    try {
-      articles = API.getArticles(1, mCategory); //Pass in the global fragment arg
-    } catch (Exception e) {
-      //e.printStackTrace();
-      articles = new ArrayList();
-    }
-
-    if (articles != null) { //If articles are returned
-      //Setup the adapter with the on click listener
-      mAdapter = new ArticleListAdapter(articles, new OnItemClickListener() {
-        @Override public void onItemClick(Article a) {
-          Log.v(TAG, "Item clicked: " + a.getTitle()); //Log the article that was clicked
-
-          //Display ReadingActivity with the selected article
-          Intent intent = new Intent(getContext(), ReadingActivity.class);
-          intent.putExtra(getString(ca.thereckoner.reckoner.R.string.articleParam), a);
-          startActivity(intent);
-        }
-      });
-
-      mRecyclerView.setAdapter(mAdapter); //Set the adapter to the recycler view
-    }
+  private void loadFromAPI(){
+    new GetArticles().execute(URL + nextPage + PARAM_CATEGORY + category);
+    nextPage++;
   }
 
   /**
-   * Method to handle the loading of more articles on scroll to the bottom on the recycler view.
+   * Static AsyncTask to handle getting articles
    */
-  RecyclerView.OnScrollListener mOnScroll = new RecyclerView.OnScrollListener() {
-    @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-      super.onScrolled(recyclerView, dx, dy);
+  private class GetArticles extends AsyncTask<String, Void, String> {
 
-      if (dy > 0) { //check for scroll down
-        //Get the current state data
-        int pos = mRecyclerView.getLayoutManager().getItemCount();
-        visibleItemCount = mLayoutManager.getChildCount();
-        totalItemCount = mLayoutManager.getItemCount();
-        pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+    @Override protected String doInBackground(String... requests) {
+      String result;
+      try {
+        Request request = new Request.Builder().url(requests[0]).build();
 
-        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-          loading = false;
-          Log.v(TAG, "Loading more articles");
+        Response response = client.newCall(request).execute();
+        result = response.body().string();
+      } catch (IOException e) {
+        result = null;
+        e.printStackTrace();
+      }
 
-          //Load more articles
-          List articles;
-          try {
-            articles = API.getArticles(nextPage, mCategory);
-            nextPage++;
-          } catch (Exception e) {
-            e.printStackTrace();
-            articles = new ArrayList();
-          }
+      return result;
+    }
 
-          mAdapter.addArticles(articles); //Add the new articles to the adapter
-          mRecyclerView.invalidate();
-          mRecyclerView.getLayoutManager().scrollToPosition(pastVisiblesItems); //Reset the pos
-        }
+    @Override protected void onPreExecute() {
+      super.onPreExecute();
+
+      if(articleListAdapter == null) {
+        articleList.setVisibility(View.GONE);
+        loadingAnimation.setVisibility(View.VISIBLE);
       }
     }
 
-    @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-      //VERY IMPORTANT that this is blank to allow for proper scroll reload handling
+    @Override protected void onPostExecute(String s) {
+      super.onPostExecute(s);
+
+      try {
+        if (s == null) {
+          Log.v(TAG, "resp is null");
+          throw new Exception();
+        }
+
+        JSONArray json;
+        json = new JSONArray(s);
+
+        if (json == null) {
+          Log.v(TAG, "json parse error");
+          throw new Exception();
+        }
+
+        Log.v(TAG, s.toString());
+        ArrayList<Article> articles = new ArrayList<>();
+
+        for (int i = 0; i < json.length(); i++) {
+          JSONObject current = json.getJSONObject(i);
+
+          if (current != null) {
+            String title = current.getString("title").replace("&nbsp;", ""); //Remove gibberish
+            String author = current.getJSONObject("author").getString("name");
+            String desc = current.getString("excerpt");
+            desc =
+                desc.substring(3, desc.length() - 5).replace("&nbsp;", ""); //Removes the html tags
+
+            String content = "<!DOCTYPE html><html><head><style>"
+                + "body{margin: 0; padding: 0;}"
+                + "p{font-family: Constantia, \"Book Antiqua\", Cambria, serif;font-size: 14px;line-height: 1.5;}"
+                + "div[id^=\"attachment\"],img{max-width: 100%;height: auto;}"
+                + "a[href^=\"http://thereckoner.ca/wp-content/uploads/\"]{pointer-events: none;cursor: default;}"
+                + "</style><body>"
+                + current.get("content")
+                + "</body></html>";
+
+            //CHeck the sdk due to Html.fromHtml(String) being deprecated
+            if (Build.VERSION.SDK_INT >= 24) {
+              title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
+              desc = Html.fromHtml(desc, Html.FROM_HTML_MODE_LEGACY).toString();
+            } else {
+              title = Html.fromHtml(title).toString();
+              desc = Html.fromHtml(desc).toString();
+            }
+
+            String image;
+            try {
+              image = current.getJSONObject("featured_image").getString("guid");
+            } catch (Exception e) {
+              image = "";
+              //e.printStackTrace(); //No need to print the stacktrace
+            }
+            //String image = current.getString("guid");
+
+            String url = current.getString("link");
+
+            articles.add(new Article(title, author, desc, image, content, url));
+          }
+        }
+
+        if (articleListAdapter == null) {
+          //Setup the adapter with the on click listener
+          articleListAdapter = new ArticleListAdapter(articles, new OnItemClickListener() {
+            @Override public void onItemClick(Article a) {
+              Log.v(TAG, "Item clicked: " + a.getTitle()); //Log the article that was clicked
+
+              //Display ReadingActivity with the selected article
+              Intent intent = new Intent(getContext(), ReadingActivity.class);
+              intent.putExtra(getString(ca.thereckoner.reckoner.R.string.articleParam), a);
+              startActivity(intent);
+            }
+          });
+
+          articleList.setAdapter(articleListAdapter); //Set the adapter to the recycler view
+        } else {
+          int length = articleListAdapter.getItemCount();
+          articleListAdapter.addArticles(articles); //Add the new articles to the adapter
+          articleListAdapter.notifyItemRangeInserted(length, articleListAdapter.getItemCount() - 1);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      loadingAnimation.setVisibility(View.GONE);
+      articleList.setVisibility(View.VISIBLE);
     }
-  };
+  }
+
+
 }

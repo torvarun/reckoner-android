@@ -1,16 +1,26 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentArticleList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
     tools:context="ca.thereckoner.reckoner.ArticleListFragment"
-    android:id="@+id/fragmentArticleList"
-    android:background="@color/colorPrimaryLight">
+    >
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/articleList"
-        android:scrollbars="vertical"
-        />
+  <ProgressBar
+      android:id="@+id/loading_animation"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:indeterminate="true"
+      android:layout_gravity="center"
+      />
+
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/articleList"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scrollbars="vertical"
+      android:visibility="gone"
+      />
 
 </FrameLayout>

@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import butterknife.BindView;
 
 /**
  * Created by Varun Venkataramanan.
@@ -145,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
     ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
     ft.replace(R.id.flContent, fragment);
-    ft.addToBackStack(null);
+    //ft.addToBackStack(null);
     ft.commit();
   }
 
@@ -164,8 +163,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override public void onBackPressed() {
-    super.onBackPressed();
+    DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    if(mDrawer.isDrawerOpen(GravityCompat.START)) { //Close the drawer if it is open
+      mDrawer.closeDrawer(GravityCompat.START);
+      return;
+    }
 
-    setTitle(oldTitle);
+    super.onBackPressed();
   }
 }
