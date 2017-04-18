@@ -17,7 +17,10 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_below="@+id/toolbar"
-      android:padding="5dp"
+      android:paddingLeft="10dp"
+      android:paddingRight="10dp"
+      android:paddingBottom="5dp"
+      android:paddingTop="5dp"
       android:background="@color/colorPrimaryLight"
       >
 
@@ -25,7 +28,7 @@
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:background="@android:color/transparent"
         />
 
 

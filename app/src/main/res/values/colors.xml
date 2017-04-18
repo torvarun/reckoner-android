@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#2196F3</color>-->
-    <color name="colorPrimary">#991B1E</color>
-    <color name="colorPrimaryDark">#8A0F0F</color>
-    <color name="colorPrimaryLight">#f0f0f0</color>
-    <color name="colorAccent">#154360</color>
-    <color name="colorPrimaryText">#212121</color>
-    <color name="colorSecondaryText">#D0D3D4</color>
-    <color name="colorIcons">#ECF0F1</color>
-    <color name="colorDivider">#566573</color>
-    <color name="overlayText">#FFFFFF</color>
+  <!--<color name="colorPrimary">#2196F3</color>-->
+  <color name="colorPrimary">#991B1E</color>
+  <color name="colorPrimaryDark">#8A0F0F</color>
+  <color name="colorPrimaryLight">#f0f0f0</color>
+  <color name="colorAccent">#154360</color>
+  <color name="colorPrimaryText">#212121</color>
+  <color name="colorSecondaryText">#D0D3D4</color>
+  <color name="colorIcons">#ECF0F1</color>
+  <color name="colorDivider">#566573</color>
+  <color name="overlayText">@color/white</color>
+  <color name="black_overlay">#66000000</color>
 
-    <color name="black_overlay">#66000000</color>
+
+  <color name="white">#FFFFFF</color>
+
 </resources>

@@ -1,46 +1,48 @@
 <resources>
-    <string name="app_name">The Reckoner</string>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
+  <string name="app_name">The Reckoner</string>
+  <string name="drawer_open">Open navigation drawer</string>
+  <string name="drawer_close">Close navigation drawer</string>
 
-    <string name="articleParam">article_intent</string>
-    <string name="sharedPrefsKey">notif_prefs</string>
+  <string name="articleParam">article_intent</string>
+  <string name="sharedPrefsKey">notif_prefs</string>
 
-    <string name="nav_news">News</string>
-    <string name="nav_editorial">Editorial</string>
-    <string name="nav_life">Life</string>
-    <string name="nav_columns">Columns</string>
-    <string name="nav_hog">Humans of Garneau</string>
-    <string name="nav_announcement">Announcements</string>
+  <string name="nav_news">News</string>
+  <string name="nav_editorial">Editorial</string>
+  <string name="nav_life">Life</string>
+  <string name="nav_columns">Columns</string>
+  <string name="nav_hog">Humans of Garneau</string>
+  <string name="nav_announcement">Announcements</string>
+  <string name="nav_rate">Rate Our App</string>
+  <string name="nav_who_we_are">Who We Are</string>
 
-    <!-- Slugs of categories to access for api calls -->
-    <string name="life">life</string>
-    <string name="writing">writing</string>
-    <string name="art">art</string>
-    <string name="reviews">reviews</string>
+  <!-- Slugs of categories to access for api calls -->
+  <string name="life">life</string>
+  <string name="writing">writing</string>
+  <string name="art">art</string>
+  <string name="reviews">reviews</string>
 
-    <string name="editorial">no-offence-but</string>
-    <string name="editorialCartoons">editorial-cartoons</string>
+  <string name="editorial">no-offence-but</string>
+  <string name="editorialCartoons">editorial-cartoons</string>
 
-    <string name="news">news</string>
-    <string name="teacherFeature">teacher-feature</string>
-    <string name="worldWeekly">world-weekly-news</string>
-    <string name="clubFeature">club-feature</string>
-    <string name="courseFeature">course-feature</string>
-    <string name="sports">sports</string>
+  <string name="news">news</string>
+  <string name="teacherFeature">teacher-feature</string>
+  <string name="worldWeekly">world-weekly-news</string>
+  <string name="clubFeature">club-feature</string>
+  <string name="courseFeature">course-feature</string>
+  <string name="sports">sports</string>
 
-    <string name="humansOfGarneau">hog</string>
-    <string name="comingToCanada">coming-to-canada</string>
+  <string name="humansOfGarneau">hog</string>
+  <string name="comingToCanada">coming-to-canada</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="new_article_notification_title_template">New article: %1$s</string>
-    <string name="title_activity_main2">Main2Activity</string>
+  <string name="new_article_notification_title_template">New article: %1$s</string>
+  <string name="title_activity_main2">Main2Activity</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+  <string name="navigation_drawer_open">Open navigation drawer</string>
+  <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+  <string name="action_settings">Settings</string>
 
 </resources>

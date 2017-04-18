@@ -1,6 +1,7 @@
 package ca.thereckoner.thereckoner;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,22 +19,22 @@ import android.webkit.WebView;
  */
 public class ReadingActivity extends AppCompatActivity {
 
-  private Article mArticle; //Article being displayed
+  private Article article; //Article being displayed
 
-  private Toolbar mToolbar; //App toolbar
+  private Toolbar toolbar; //App toolbar
 
-  private WebView mWebView; //WebView to display the article in
+  private WebView webView; //WebView to display the article in
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(ca.thereckoner.thereckoner.R.layout.activity_reading);
 
     Intent intent = getIntent();
-    mArticle = (Article) intent.getSerializableExtra(
+    article = (Article) intent.getSerializableExtra(
         getString(ca.thereckoner.thereckoner.R.string.articleParam));
 
-    mToolbar = (Toolbar) findViewById(ca.thereckoner.thereckoner.R.id.toolbar); //Setup toolbar
-    setSupportActionBar(mToolbar);
+    toolbar = (Toolbar) findViewById(ca.thereckoner.thereckoner.R.id.toolbar); //Setup toolbar
+    setSupportActionBar(toolbar);
 
     createView();
   }
@@ -52,16 +53,16 @@ public class ReadingActivity extends AppCompatActivity {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
 
-        String subject = "The Reckoner: " + mArticle.getTitle(); //Subject of message
+        String subject = "The Reckoner: " + article.getTitle(); //Subject of message
 
         //Body of message
-        String body = mArticle.getTitle()
+        String body = article.getTitle()
             + "\nBy "
-            + mArticle.getAuthor()
+            + article.getAuthor()
             + "\n"
-            + mArticle.getDescription()
+            + article.getDescription()
             + "\n"
-            + mArticle.getContentURL();
+            + article.getContentURL();
 
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
@@ -78,11 +79,12 @@ public class ReadingActivity extends AppCompatActivity {
    * Sets up the WebView with the article. Also displays the article title in the toolbar.
    */
   private void createView() {
-    mWebView = (WebView) findViewById(ca.thereckoner.thereckoner.R.id.webView);
-    mWebView.loadDataWithBaseURL(null, mArticle.getContent(), "text/html", "utf-8",
+    webView = (WebView) findViewById(ca.thereckoner.thereckoner.R.id.webView);
+    webView.setBackgroundColor(Color.TRANSPARENT);
+    webView.loadDataWithBaseURL(null, article.getContent(), "text/html", "utf-8",
         null); //Ensure the utf-8 setting
 
-    setTitle(mArticle.getTitle()); //Set the toolbar to the title of the article
+    setTitle(article.getTitle()); //Set the toolbar to the title of the article
   }
 
   @Override public void onBackPressed() {

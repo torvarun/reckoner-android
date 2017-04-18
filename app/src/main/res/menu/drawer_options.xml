@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
   <group
       android:id="@+id/nav_group_main"
@@ -15,6 +16,20 @@
         android:title="@string/nav_life" />
   </group>
 
+  <group
+    android:id="@+id/nav_external_links"
+    android:checkableBehavior="single"
+    >
+
+    <item
+        android:id="@+id/nav_rate"
+        android:title="@string/nav_rate" />
+
+    <item
+        android:id="@+id/nav_about_us"
+        android:title="@string/nav_who_we_are" />
+
+  </group>
   <!--
   Disable the Human's of Garneau and the Announcements for now
 

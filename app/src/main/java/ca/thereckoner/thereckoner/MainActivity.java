@@ -1,6 +1,8 @@
 package ca.thereckoner.thereckoner;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import ca.thereckoner.thereckoner.rating.AppRating;
 
 /**
  * Created by Varun Venkataramanan.
@@ -102,50 +105,77 @@ public class MainActivity extends AppCompatActivity {
    * @param menuItem Menu item in nav drawer that was clicked
    */
   public void selectDrawerItem(final MenuItem menuItem) {
-    mHandler.postDelayed(new Runnable() {
-      @Override public void run() {
-        startNavDrawerItem(menuItem.getItemId());
-      }
-    }, NAV_CLOSE_TIME);
-
-    // Highlight the selected item has been done by NavigationView
-    menuItem.setChecked(true);
-
-    // Set action bar title
-    oldTitle = getTitle().toString();
-    setTitle(menuItem.getTitle());
+    if(menuItem.getTitle() != oldTitle) {
+      mHandler.postDelayed(new Runnable() {
+        @Override public void run() {
+          startNavDrawerItem(menuItem);
+        }
+      }, NAV_CLOSE_TIME);
+    }
 
     // Close the navigation drawer
     DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     mDrawer.closeDrawer(GravityCompat.START);
   }
 
-  private void startNavDrawerItem(int itemId){
-    Fragment fragment;
+  private void startNavDrawerItem(MenuItem menuItem){
+    int itemId = menuItem.getItemId();
+
+    boolean toLaunchFrag = true;
+    Fragment fragment = null;
+    String fragTag = null;
     switch(itemId) {
       case ca.thereckoner.thereckoner.R.id.nav_news:
         Log.v(TAG, "news");
+        fragTag = getString(R.string.news);
         fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.thereckoner.R.string.news));
         break;
+
       case ca.thereckoner.thereckoner.R.id.nav_editorial:
         Log.v(TAG, "editorial");
+        fragTag = getString(R.string.editorial);
         fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.thereckoner.R.string.editorial));
         break;
+
       case ca.thereckoner.thereckoner.R.id.nav_life:
         Log.v(TAG, "life");
+        fragTag = getString(R.string.life);
         fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.thereckoner.R.string.life));
         break;
+
+      case R.id.nav_rate:
+        Log.v(TAG, "rating");
+        toLaunchFrag = false;
+        AppRating app = new AppRating();
+        app.rateNow(MainActivity.this);
+        break;
+
+      case R.id.nav_about_us:
+        Log.v(TAG, "about us");
+        toLaunchFrag = false;
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://thereckoner.ca/who-we-are-6th-guard/")); //Launch who we are page
+        startActivity(browserIntent);
+        break;
+
       default:
         Log.v(TAG, "default");
         fragment = ArticleListFragment.newInstance("");
     }
 
-    // Insert the fragment by replacing any existing fragment
-    final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-    ft.replace(R.id.flContent, fragment);
-    //ft.addToBackStack(null);
-    ft.commit();
+    if(toLaunchFrag && fragment != null) {
+      // Set action bar title
+      oldTitle = getTitle().toString();
+      setTitle(menuItem.getTitle());
+
+      // Insert the fragment by replacing any existing fragment
+      final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+      ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+      ft.replace(R.id.flContent, fragment);
+      //ft.addToBackStack(fragTag);
+      ft.commit();
+    } else{
+      menuItem.setChecked(false);
+    }
   }
 
   @Override
@@ -167,8 +197,18 @@ public class MainActivity extends AppCompatActivity {
     if(mDrawer.isDrawerOpen(GravityCompat.START)) { //Close the drawer if it is open
       mDrawer.closeDrawer(GravityCompat.START);
       return;
+    } else if (oldTitle != getString(R.string.app_name)) {
+      //getSupportFragmentManager().popBackStackImmediate();
     }
 
     super.onBackPressed();
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+
+    if (getTitle() == getString(R.string.nav_rate)) {
+      setTitle(oldTitle);
+    }
   }
 }
