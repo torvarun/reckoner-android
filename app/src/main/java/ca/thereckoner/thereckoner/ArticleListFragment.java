@@ -21,6 +21,8 @@ import ca.thereckoner.thereckoner.View.InfiniteRecyclerViewScrollAdapter;
 import ca.thereckoner.thereckoner.View.OnItemClickListener;
 import ca.thereckoner.thereckoner.View.ArticleListAdapter;
 
+import ca.thereckoner.thereckoner.firebase.AnalyticsEvent;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import java.io.IOException;
 import java.util.ArrayList;
 import okhttp3.OkHttpClient;
@@ -60,6 +62,8 @@ public class ArticleListFragment extends Fragment {
   private static final String PARAM_CATEGORY = "&filter[category_name]=";
   private static final String PARAM_POST_LIMIT = "&filter[posts_per_page]=";
   OkHttpClient client = new OkHttpClient();
+
+  FirebaseAnalytics firebaseAnalytics;
 
   public ArticleListFragment() {
     // Required empty public constructor
@@ -125,6 +129,8 @@ public class ArticleListFragment extends Fragment {
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
+
+    firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         /*if (context instanceof OnFragmentInteractionListener) {
             interactionListener = (OnFragmentInteractionListener) context;
         } else {
@@ -271,6 +277,10 @@ public class ArticleListFragment extends Fragment {
           articleListAdapter = new ArticleListAdapter(articles, new OnItemClickListener() {
             @Override public void onItemClick(Article a) {
               Log.v(TAG, "Item clicked: " + a.getTitle()); //Log the article that was clicked
+
+              Bundle analyticsInfo = new Bundle();
+              analyticsInfo.putString(AnalyticsEvent.PARAM_ARTICLE_NAME, a.getTitle());
+              firebaseAnalytics.logEvent(AnalyticsEvent.EVENT_ARTICLE_VIEWED, analyticsInfo);
 
               //Display ReadingActivity with the selected article
               Intent intent = new Intent(getContext(), ReadingActivity.class);

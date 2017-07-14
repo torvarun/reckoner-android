@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import ca.thereckoner.thereckoner.firebase.AnalyticsEvent;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 /**
  * Created by Varun Venkataramanan.
@@ -25,9 +27,13 @@ public class ReadingActivity extends AppCompatActivity {
 
   private WebView webView; //WebView to display the article in
 
+  private FirebaseAnalytics firebaseAnalytics;
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(ca.thereckoner.thereckoner.R.layout.activity_reading);
+
+    firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
     Intent intent = getIntent();
     article = (Article) intent.getSerializableExtra(
@@ -49,6 +55,9 @@ public class ReadingActivity extends AppCompatActivity {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case ca.thereckoner.thereckoner.R.id.share:
+        Bundle analyticsInfo = new Bundle();
+        analyticsInfo.putString(AnalyticsEvent.PARAM_ARTICLE_NAME, article.getTitle());
+        firebaseAnalytics.logEvent(AnalyticsEvent.EVENT_ARTICLE_SHARED, analyticsInfo);
 
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");

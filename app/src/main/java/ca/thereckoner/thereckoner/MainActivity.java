@@ -16,7 +16,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import ca.thereckoner.thereckoner.firebase.AnalyticsEvent;
 import ca.thereckoner.thereckoner.rating.AppRating;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 /**
  * Created by Varun Venkataramanan.
@@ -34,11 +36,19 @@ public class MainActivity extends AppCompatActivity {
 
   private String oldTitle;
 
+  private FirebaseAnalytics firebaseAnalytics;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setTheme(ca.thereckoner.thereckoner.R.style.AppTheme); //Remove the splash
     setContentView(ca.thereckoner.thereckoner.R.layout.activity_main);
+
+    firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+    Bundle bundle = new Bundle();
+    bundle.putString(AnalyticsEvent.PARAM_TAG, TAG);
+    firebaseAnalytics.logEvent(AnalyticsEvent.APP_OPEN, bundle);
 
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -124,28 +134,36 @@ public class MainActivity extends AppCompatActivity {
     boolean toLaunchFrag = true;
     Fragment fragment = null;
     String fragTag = null;
+
+    Bundle analyticsInfo = new Bundle();
+    analyticsInfo.putString(AnalyticsEvent.PARAM_TAG, TAG);
+
     switch(itemId) {
       case ca.thereckoner.thereckoner.R.id.nav_news:
         Log.v(TAG, "news");
         fragTag = getString(R.string.news);
+        analyticsInfo.putString(AnalyticsEvent.PARAM_CATEGORY, "news");
         fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.thereckoner.R.string.news));
         break;
 
       case ca.thereckoner.thereckoner.R.id.nav_editorial:
         Log.v(TAG, "editorial");
         fragTag = getString(R.string.editorial);
+        analyticsInfo.putString(AnalyticsEvent.PARAM_CATEGORY, "editorial");
         fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.thereckoner.R.string.editorial));
         break;
 
       case ca.thereckoner.thereckoner.R.id.nav_life:
         Log.v(TAG, "life");
         fragTag = getString(R.string.life);
+        analyticsInfo.putString(AnalyticsEvent.PARAM_CATEGORY, "life");
         fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.thereckoner.R.string.life));
         break;
 
       case R.id.nav_rate:
         Log.v(TAG, "rating");
         toLaunchFrag = false;
+        firebaseAnalytics.logEvent(AnalyticsEvent.EVENT_RATING_LAUNCHED, analyticsInfo);
         AppRating app = new AppRating();
         app.rateNow(MainActivity.this);
         break;
@@ -153,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
       case R.id.nav_about_us:
         Log.v(TAG, "about us");
         toLaunchFrag = false;
+        firebaseAnalytics.logEvent(AnalyticsEvent.EVENT_ABOUT_US, analyticsInfo);
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://thereckoner.ca/who-we-are-6th-guard/")); //Launch who we are page
         startActivity(browserIntent);
         break;
@@ -166,6 +185,8 @@ public class MainActivity extends AppCompatActivity {
       // Set action bar title
       oldTitle = getTitle().toString();
       setTitle(menuItem.getTitle());
+
+      firebaseAnalytics.logEvent(AnalyticsEvent.EVENT_CATEGORY_VIEWED, analyticsInfo);
 
       // Insert the fragment by replacing any existing fragment
       final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

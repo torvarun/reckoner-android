@@ -8,50 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:926580328493:android:2ed85cb5ccb6de35",
-        "android_client_info": {
-          "package_name": "ca.thereckoner.reckoner"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "926580328493-jn0iosgl0dcj7bv5ke1pdoja4nk2jfdg.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ca.thereckoner.reckoner",
-            "certificate_hash": "2f10620121a258578e09256e801a71908dc1b5e3"
-          }
-        },
-        {
-          "client_id": "926580328493-s03kuvl6j88q1elqp8ccf5mrauashuo8.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAM3HMwzkCVRxmBqu9dWY0b2nnMF9DaBco"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "926580328493-s03kuvl6j88q1elqp8ccf5mrauashuo8.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:926580328493:android:90da0130e4fed0f2",
         "android_client_info": {
           "package_name": "ca.thereckoner.thereckoner"
