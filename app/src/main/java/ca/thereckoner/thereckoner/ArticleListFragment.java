@@ -23,6 +23,7 @@ import ca.thereckoner.thereckoner.View.ArticleListAdapter;
 
 import ca.thereckoner.thereckoner.firebase.AnalyticsEvent;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import java.io.IOException;
 import java.util.ArrayList;
 import okhttp3.OkHttpClient;
@@ -279,7 +280,7 @@ public class ArticleListFragment extends Fragment {
               Log.v(TAG, "Item clicked: " + a.getTitle()); //Log the article that was clicked
 
               Bundle analyticsInfo = new Bundle();
-              analyticsInfo.putString(AnalyticsEvent.PARAM_ARTICLE_NAME, a.getTitle());
+              analyticsInfo.putString(AnalyticsEvent.PARAM_ARTICLE, a.getTitle());
               firebaseAnalytics.logEvent(AnalyticsEvent.EVENT_ARTICLE_VIEWED, analyticsInfo);
 
               //Display ReadingActivity with the selected article
@@ -296,6 +297,8 @@ public class ArticleListFragment extends Fragment {
           articleListAdapter.notifyItemRangeInserted(length, articleListAdapter.getItemCount() - 1);
         }
       } catch (Exception e) {
+        FirebaseCrash.logcat(Log.ERROR, TAG, "Unable to get article list");
+        FirebaseCrash.report(e);
         e.printStackTrace();
       }
 

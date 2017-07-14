@@ -2,14 +2,21 @@ package ca.thereckoner.thereckoner;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import butterknife.ButterKnife;
 import ca.thereckoner.thereckoner.firebase.AnalyticsEvent;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 
 /**
  * Created by Varun Venkataramanan.
@@ -21,10 +28,12 @@ import com.google.firebase.analytics.FirebaseAnalytics;
  */
 public class ReadingActivity extends AppCompatActivity {
 
-  private Article article; //Article being displayed
+  private static final String TAG = "ReadingActivity";
+
+  private Article article = null; //Article being displayed
+  private String deepLinkUrl = null;
 
   private Toolbar toolbar; //App toolbar
-
   private WebView webView; //WebView to display the article in
 
   private FirebaseAnalytics firebaseAnalytics;
@@ -32,17 +41,41 @@ public class ReadingActivity extends AppCompatActivity {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(ca.thereckoner.thereckoner.R.layout.activity_reading);
+    ButterKnife.bind(this);
+
+    toolbar = (Toolbar) findViewById(R.id.toolbar);
+    webView = (WebView) findViewById(R.id.webView);
 
     firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-    Intent intent = getIntent();
-    article = (Article) intent.getSerializableExtra(
-        getString(ca.thereckoner.thereckoner.R.string.articleParam));
-
-    toolbar = (Toolbar) findViewById(ca.thereckoner.thereckoner.R.id.toolbar); //Setup toolbar
     setSupportActionBar(toolbar);
 
-    createView();
+    //Check to see if the activity was started by a deep link
+    FirebaseDynamicLinks.getInstance()
+        .getDynamicLink(getIntent())
+        .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+          @Override
+          public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+            // Get deep link from result (may be null if no link is found)
+            if (pendingDynamicLinkData != null) {
+              deepLinkUrl = pendingDynamicLinkData.getLink().toString();
+
+              createView(deepLinkUrl);
+            } else{
+              Intent intent = getIntent();
+              article = (Article) intent.getSerializableExtra(
+                  getString(ca.thereckoner.thereckoner.R.string.articleParam));
+              createView(article);
+            }
+          }
+        })
+        .addOnFailureListener(this, new OnFailureListener() {
+          @Override
+          public void onFailure(@NonNull Exception e) {
+            //Activity not started from deep link
+            Log.w(TAG, "getDynamicLink:onFailure", e);
+          }
+        });
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,24 +89,32 @@ public class ReadingActivity extends AppCompatActivity {
     switch (item.getItemId()) {
       case ca.thereckoner.thereckoner.R.id.share:
         Bundle analyticsInfo = new Bundle();
-        analyticsInfo.putString(AnalyticsEvent.PARAM_ARTICLE_NAME, article.getTitle());
-        firebaseAnalytics.logEvent(AnalyticsEvent.EVENT_ARTICLE_SHARED, analyticsInfo);
+
 
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
 
-        String subject = "The Reckoner: " + article.getTitle(); //Subject of message
+        String body;
 
-        //Body of message
-        String body = article.getTitle()
-            + "\nBy "
-            + article.getAuthor()
-            + "\n"
-            + article.getDescription()
-            + "\n"
-            + article.getContentURL();
+        if (article != null) {
+          body = article.getTitle()
+              + "\nBy "
+              + article.getAuthor()
+              + "\n"
+              + article.getDescription()
+              + "\n"
+              + article.getContentURL();
 
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+          analyticsInfo.putString(AnalyticsEvent.PARAM_ARTICLE, article.getTitle());
+        } else {
+          body = deepLinkUrl;
+
+          analyticsInfo.putString(AnalyticsEvent.PARAM_ARTICLE, deepLinkUrl);
+        }
+
+        firebaseAnalytics.logEvent(AnalyticsEvent.EVENT_ARTICLE_SHARED, analyticsInfo);
+
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
         startActivity(Intent.createChooser(sharingIntent,
             "Share article with.... ")); //Text displayed on share dialog
@@ -87,13 +128,19 @@ public class ReadingActivity extends AppCompatActivity {
   /**
    * Sets up the WebView with the article. Also displays the article title in the toolbar.
    */
-  private void createView() {
-    webView = (WebView) findViewById(ca.thereckoner.thereckoner.R.id.webView);
+  private void createView(Article a) {
     webView.setBackgroundColor(Color.TRANSPARENT);
-    webView.loadDataWithBaseURL(null, article.getContent(), "text/html", "utf-8",
+    webView.loadDataWithBaseURL(null, a.getContent(), "text/html", "utf-8",
         null); //Ensure the utf-8 setting
 
-    setTitle(article.getTitle()); //Set the toolbar to the title of the article
+    setTitle(a.getTitle()); //Set the toolbar to the title of the article
+  }
+
+  private void createView(String url){
+    webView.setBackgroundColor(Color.TRANSPARENT);
+    webView.loadUrl(url);
+
+    setTitle("The Reckoner of MGCI");
   }
 
   @Override public void onBackPressed() {
