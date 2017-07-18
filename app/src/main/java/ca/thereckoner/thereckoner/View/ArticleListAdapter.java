@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import ca.thereckoner.thereckoner.Article;
@@ -56,7 +57,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
       title.setText(article.getTitle());
       description.setText(article.getDescription());
 
-      //Set the image from URL using Glide library
+      //Set the image from URL using Picasso library
 
       Log.v(TAG, "Image URL: " + article.getImageURL());
 

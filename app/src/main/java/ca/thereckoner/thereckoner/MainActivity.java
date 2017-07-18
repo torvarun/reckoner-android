@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import ca.thereckoner.thereckoner.firebase.AnalyticsEvent;
 import ca.thereckoner.thereckoner.rating.AppRating;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Varun Venkataramanan.
