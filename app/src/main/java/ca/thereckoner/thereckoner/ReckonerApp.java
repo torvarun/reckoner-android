@@ -24,6 +24,7 @@ public class ReckonerApp extends Application {
 
     Picasso picasso = new Picasso.Builder(this)
         .downloader(new OkHttp3Downloader(client))
+
         .build();
     picasso.setIndicatorsEnabled(true);
     picasso.setLoggingEnabled(true);
